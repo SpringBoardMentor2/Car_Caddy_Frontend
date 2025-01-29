@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Management Module</title>
+    <style>
+        /* General Body Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #0072ff, #00c6ff);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header Styling */
+        .header {
+            text-align: center;
+            padding: 50px 20px;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin: 0;
+            color: #fff;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        /* Content Styling */
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        /* Card Styling */
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            border-radius: 10px;
+            width: 300px;
+            padding: 20px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .card img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .card h2 {
+            margin: 10px 0;
+            font-size: 1.5em;
+        }
+
+        .card p {
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+
+        /* Button Styling */
+        .card button {
+            background-color: #0072ff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.2s;
+        }
+
+        .card button:hover {
+            background-color: #005bb5;
+        }
+
+        /* Footer Styling */
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            color: #ffffff;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Welcome to the Car Management Module</h1>
+        <p>Manage your vehicles efficiently and effortlessly!</p>
+    </div>
+
+    <div class="content">
+        <!-- Car Registration -->
+        <div class="card">
+            <!-- <img th:src="@{/images/1.jpg}" alt="Car Registration">   -->
+            <h2>Car Registration</h2>
+            <p>Register new vehicles into the system and maintain a comprehensive database of cars.</p>
+            <button onclick="window.open('http://localhost:8777/', '_blank')">Register Car</button>
+        </div>
+
+        <!-- Find All Vehicles -->
+        <div class="card">
+            <!-- <img th:src="@{/images/2.jpg}" alt="All Vehicles"> -->
+            <h2>Find All Vehicles</h2>
+            <p>View a complete list of all vehicles in your inventory.</p> 
+            <button onclick="window.open('http://localhost:8777/viewAllVehicles', '_blank')">View Vehicle List</button>
+        </div>
+
+        <!-- Find Vehicles by Type -->
+        <div class="card">
+            <!-- <img th:src="@{/images/3.jpg}" alt="Vehicle Type"> -->
+            <h2>Find Vehicles by Type</h2>
+            <p>Search for vehicles by their type (Car, SUV, Bike) to refine your results.</p>  
+            <button onclick="window.open('http://localhost:8777/viewbytype', '_blank')">Search by Type</button>
+        </div>
+
+        <!-- Find Vehicles by Status -->
+        <div class="card">
+            <!-- <img th:src="@{/images/4.jpg}" alt="Vehicle Status"> -->
+            <h2>Find Vehicles by Status</h2>
+            <p>Look up vehicles based on their availability status (Available, Not Available).</p> 
+            <button onclick="window.open('http://localhost:8777/view', '_blank')">Search by Status</button>
+        </div>
+
+        <!-- Update Vehicle Details -->
+        <div class="card">
+            <!--<img th:src="@{/images/5.jpg}" alt="Update Vehicle">  -->
+            <h2>Update Vehicle Details</h2>
+            <p>Update existing vehicle details to keep your database up-to-date.</p> 
+            <button onclick="window.open('http://localhost:8777/viewbyID', '_blank')">Update Vehicle</button>
+        </div>
+        
+        <!-- Delete Vehicle Details -->
+        <div class="card">
+            <!--<img th:src="@{/images/5.jpg}" alt="Update Vehicle">  -->
+            <h2>Delete Vehicle Details</h2>
+            <p>Delete existing vehicle details to keep your database up-to-date.</p> 
+            <button onclick="window.open('http://localhost:8777/viewbyVehicleID', '_blank')">Delete Vehicle</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Car Management Module. All rights reserved.</p>
+    </footer>
+</body>
+</html>

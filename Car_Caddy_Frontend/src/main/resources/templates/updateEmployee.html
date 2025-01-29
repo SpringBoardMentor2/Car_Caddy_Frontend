@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Employee</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-image: url('/carrentalsystem/src/main/resources/templates/images/bg2.jpg'); /* Replace with your background image URL */
+            background-size: cover;
+            background-position: center;
+            color: #f0f0f0;
+            height: 100vh;
+        }
+        .navbar {
+            background-color: rgba(31, 31, 31, 0.9);
+            color: #fff;
+            padding: 15px 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        .navbar .brand {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .back-button {
+            background-color: #007bff;
+            color: white;
+            position: absolute;
+            top: 70px; /* Position below the navbar */
+            left: 90%;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-5px);
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: rgba(2, 2, 2, 0.7); /* Semi-transparent background */
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+        }
+        .form-container h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            color: #ccc;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .form-group input {
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #444;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        .form-group button {
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: #fff;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+		.message-field p
+		{
+			color: white;
+			    background-color: #4caf50;
+			    padding: 10px;
+			    border-radius: 5px;
+			    text-align: center;
+		}
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="brand">CarCaddy</div>
+    </div>
+	<a th:href="@{/employeeDashboard(employeeId=${employee.employeeId})}" class="back-button">Back</a>
+    <div class="form-container">
+        <h1>Update Employee Details</h1>
+		
+		<div class="message-field" th:if="${message != null}">
+		       <p th:text="${message}"></p>
+		   </div>
+        
+		<form action="/updateemployee" method="POST">
+		       <input type="hidden" name="employeeId" th:value="${employee.employeeId}" />
+		       <div class="form-group">
+		           <label for="name">Name:</label>
+		           <input type="text" id="name" name="name" th:value="${employee.employeeName}" placeholder="Enter Name" required>
+		       </div>
+		       <div class="form-group">
+		           <label for="email">Email:</label>
+		           <input type="email" id="email" name="email" th:value="${employee.employeeEmail}" placeholder="Enter Email" required>
+		       </div>
+		       <div class="form-group">
+		           <label for="dob">Date of Birth:</label>
+		           <input type="date" id="dob" name="dob" th:value="${employee.dateOfBirth}" required>
+		       </div>
+		       <div class="form-group">
+		           <button type="submit">Update</button>
+		       </div>
+		   </form>
+    </div>
+</body>
+</html>	
