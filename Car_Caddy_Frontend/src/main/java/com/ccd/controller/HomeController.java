@@ -53,6 +53,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ccd.model.Employee;
+import com.ccd.model.Rent_Booking;
 import com.ccd.model.UserInfo;
 
 import jakarta.servlet.http.HttpSession;
@@ -65,6 +66,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -86,6 +88,7 @@ import org.springframework.http.HttpHeaders;
 
 import java.util.*;
 import java.text.*;
+import java.time.temporal.ChronoUnit;
 
 @Controller
 public class HomeController {
@@ -104,7 +107,7 @@ public class HomeController {
 	@GetMapping("///")
 	public String homePage(Model model) {
 		model.addAttribute("userInfo", new UserInfo());
-//	        return "index"; 
+		// return "index";
 		return "main1";
 	}
 
@@ -131,16 +134,17 @@ public class HomeController {
 
 			if (response.getStatusCode().is2xxSuccessful()) {
 				Map<String, Object> responseBody = response.getBody();
-//	                String employeeId = responseBody.get("employeeId").toString();
+				// String employeeId = responseBody.get("employeeId").toString();
 				String defaultPassword = responseBody.get("defaultPassword").toString();
 				String employeeId = responseBody.get("employeeId").toString();
 
 				model.addAttribute("message", "Employee Register successfully!");
-//	                model.addAttribute("employeeId", employeeId);
+				// model.addAttribute("employeeId", employeeId);
 				model.addAttribute("defaultPassword", defaultPassword);
 				model.addAttribute("employeeId", employeeId);
 
-//	                return "redirect:/loginPage?email=" + employeeEmail + "&defaultPassword=" + defaultPassword;
+				// return "redirect:/loginPage?email=" + employeeEmail + "&defaultPassword=" +
+				// defaultPassword;
 				return "registerEmployee";
 
 			} else {
@@ -160,7 +164,7 @@ public class HomeController {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-//					
+			//
 
 			// Map backend errors to BindingResult
 			for (Map.Entry<String, String> entryset : errors.entrySet()) {
@@ -172,7 +176,7 @@ public class HomeController {
 		}
 
 		return "registerEmployee";
-//	        return "index";
+		// return "index";
 	}
 
 	@GetMapping("/firstLogin")
@@ -264,32 +268,33 @@ public class HomeController {
 		}
 	}
 
-//	    @GetMapping("/getAllEmployees")
-//		public String viewAllEmployees(Model model) {
-//			String url = backendUrl + "/getAllEmployees";
-//
-//			try {
-//				// Fetching employee data from backend API
-//				ResponseEntity<List<Employee>> response = restTemplate.exchange(
-//						url,
-//						HttpMethod.GET,
-//						null,
-//						new ParameterizedTypeReference<List<Employee>>() {
-//						});
-//
-//				List<Employee> employees = response.getBody();
-//				if (employees != null && !employees.isEmpty()) {
-//					model.addAttribute("employees", employees);
-//					return "dashboard"; // Returning the "dashboard" view
-//				} else {
-//					model.addAttribute("errorMessage", "No employee records found.");
-//					return "statuspage"; // Returning the error view if no records
-//				}
-//			} catch (HttpClientErrorException | HttpServerErrorException e) {
-//				model.addAttribute("errorMessage", "Error occurred while fetching employee data. Please try again later.");
-//				return "statuspage"; // Returning the error view
-//			}
-//		}
+	// @GetMapping("/getAllEmployees")
+	// public String viewAllEmployees(Model model) {
+	// String url = backendUrl + "/getAllEmployees";
+	//
+	// try {
+	// // Fetching employee data from backend API
+	// ResponseEntity<List<Employee>> response = restTemplate.exchange(
+	// url,
+	// HttpMethod.GET,
+	// null,
+	// new ParameterizedTypeReference<List<Employee>>() {
+	// });
+	//
+	// List<Employee> employees = response.getBody();
+	// if (employees != null && !employees.isEmpty()) {
+	// model.addAttribute("employees", employees);
+	// return "dashboard"; // Returning the "dashboard" view
+	// } else {
+	// model.addAttribute("errorMessage", "No employee records found.");
+	// return "statuspage"; // Returning the error view if no records
+	// }
+	// } catch (HttpClientErrorException | HttpServerErrorException e) {
+	// model.addAttribute("errorMessage", "Error occurred while fetching employee
+	// data. Please try again later.");
+	// return "statuspage"; // Returning the error view
+	// }
+	// }
 
 	@GetMapping("/viewProfile")
 	public String viewProfile(Model model, HttpSession session) {

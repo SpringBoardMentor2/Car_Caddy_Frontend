@@ -101,18 +101,43 @@ public class BookingController {
 		RestTemplate restTemplate = new RestTemplate();
 		try {
 			if (booking != null) {
-				Customer customer = restTemplate.getForObject(BASE_URL + "/customers/" + 4, Customer.class);
+				Customer customer = restTemplate.getForObject(BASE_URL + "/customers/" + 1, Customer.class);
 				Car car = restTemplate.getForObject(BASE_URL + "/cars/" + carId, Car.class);
 				System.out.println(
-						"For Sake Of Understanding: Customer Details Will Come From Session That's At This Moment Taking Static Data");
-				Employee emp = restTemplate.getForObject(BASE_URL + "/cars/" + carId + "/employee", Employee.class);
-				System.out.println(emp.getDesignation());
-				Employee employee = restTemplate.getForObject(BASE_URL + "/employees/" + emp.getEmployeeId(),
-						Employee.class);
+						"For Sake Of Understanding: Customer Details Will Come From Session At This Moment Taking Static Data");
+
+				ResponseEntity<List<Employee>> employeeResponse = restTemplate.exchange(
+						"http://localhost:9090/getAllEmployees",
+						HttpMethod.GET,
+						null,
+						new ParameterizedTypeReference<List<Employee>>() {
+						});
+				List<Employee> employees = employeeResponse.getBody();
+				Employee employee = null;
+				if (employees != null && !employees.isEmpty()) {
+					for (Employee emp : employees) {
+						if ("available".equalsIgnoreCase(emp.getAvailabilityStatus())) {
+							employee = emp;
+							break;
+						}
+					}
+				}
+
 				Rent_Booking book = new Rent_Booking();
 				book.setCar(car);
 				book.setCustomer(customer);
-				book.setEmployee(employee);
+				// book.setEmployee(employee);
+				if (employee != null) {
+					String availability = "not-available";
+					ResponseEntity<?> availabilityResponse = restTemplate.exchange(
+							"http://localhost:9090/updateEmployeeAvailability/" + employee.getEmployeeId() + "/"
+									+ availability,
+							HttpMethod.POST,
+							null,
+							Void.class);
+							System.out.println(availabilityResponse);
+					book.setEmployee(employee);
+				}
 				book.setStartDate(booking.getStartDate());
 				book.setEndDate(booking.getEndDate());
 				book.setLocation(booking.getLocation());
@@ -226,8 +251,29 @@ public class BookingController {
 	public String cancelBooking(@PathVariable("bookingId") int id, Model model) {
 		RestTemplate restTemplate = new RestTemplate();
 		try {
+			ResponseEntity<Rent_Booking> response1 = restTemplate
+					.getForEntity(BASE_URL + "/viewBookingById/" + id, Rent_Booking.class);
+			Rent_Booking book = response1.getBody();
+
+			if (book == null) {
+				model.addAttribute("errorMessage", "Booking not found");
+				return "redirect:/viewAllBookings";
+			}
+
 			ResponseEntity<String> response = restTemplate.exchange(BASE_URL + "/cancelBooking/" + id,
 					HttpMethod.DELETE, null, String.class);
+
+			if (book.getEmployee() != null) {
+				String availability = "available";
+				ResponseEntity<?> availabilityResponse = restTemplate.exchange(
+						"http://localhost:9090/updateEmployeeAvailability/" + book.getEmployee().getEmployeeId() + "/"
+								+ availability,
+						HttpMethod.POST,
+						null,
+						Void.class);
+						System.out.println(availabilityResponse);
+			}
+
 			model.addAttribute("message", response.getBody());
 		} catch (HttpClientErrorException e) {
 			Map<String, String> errors = null;
@@ -242,6 +288,9 @@ public class BookingController {
 			for (Map.Entry<String, String> entry : errors.entrySet()) {
 				model.addAttribute(entry.getKey(), entry.getValue());
 			}
+		} catch (Exception e) {
+			model.addAttribute("errorMessage", "An unexpected error occurred: " + e.getMessage());
+			e.printStackTrace();
 		}
 		return "redirect:/viewAllBookings";
 	}
@@ -303,6 +352,7 @@ public class BookingController {
 			ResponseEntity<Rent_Booking> response1 = restTemplate
 					.getForEntity(BASE_URL + "/viewBookingById/" + bookingId, Rent_Booking.class);
 			Rent_Booking book = response1.getBody();
+
 			if (book != null) {
 				book.setStartDate(booking.getStartDate());
 				book.setEndDate(booking.getEndDate());

@@ -16,6 +16,7 @@ public class Employee {
 	private String designation;
 	private LocalDate accountExpiryDate;
 	private String status; // active or inactive
+	private String availabilityStatus = "available";
 	private List<Rent_Booking> bookings;
 
 //    private Car assignedCar;
