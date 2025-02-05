@@ -162,7 +162,7 @@ public class CustomerController {
 					// Store the customer in the session
 					session.setAttribute("customer", customer);
 					model.addAttribute("customer", session.getAttribute("customer"));
-					return "dashboard"; // Redirect to the dashboard page
+					return "dashboard3"; // Redirect to the dashboard page
 				}
 			}
 		} catch (HttpClientErrorException e) {

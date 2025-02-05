@@ -19,6 +19,15 @@ public class Car {
 	private double endKm;
 	private double rentRate;
 	private String status;
+	private String email;
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
 	private LocalDate lastMaintenanceDate;
 	private LocalDate nextMaintenanceDate;

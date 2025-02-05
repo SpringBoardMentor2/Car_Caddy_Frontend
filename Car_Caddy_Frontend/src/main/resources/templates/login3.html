@@ -3,11 +3,7 @@
 <head>
     <title>Customer Login</title>
     <style>
-        {
-   margin: 0;
-   padding: 0;
-   box-sizing: border-box;
-}
+     
 body {
    font-family: Arial, sans-serif;
    margin: 0;
@@ -15,6 +11,11 @@ body {
    line-height: 1.6;
    background-color: #f9f9f9;
    color: #333;
+}
+   * { /* This is the crucial change */
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
 }
 .header {
    display: flex;
@@ -70,7 +71,16 @@ body {
    z-index: 10;
    border-radius: 5px;
 }
-
+/* Video background */
+        .background-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures video covers the whole background */
+            z-index: -1; /* Makes sure the video is behind other content */
+        }
 .dropdown-menu li {
    padding: 0.5rem 1rem;
 }
@@ -172,10 +182,30 @@ input:focus, select:focus {
        flex-direction: column;
    }
 }
+
+.sign-up-text {
+  font-size: 16px; /* Adjust font size as needed */
+  color: #333; /* Adjust text color as needed */
+  margin-top: 10px; /* Adjust margin as needed */
+  text-align: center; /* Center the text */
+}
+
+.sign-up-text a {
+  color: #007bff; /* Adjust link color as needed (e.g., blue) */
+  text-decoration: none; /* Remove underline from the link */
+}
+
+.sign-up-text a:hover {
+  text-decoration: underline; /* Add underline on hover */
+}
         /* CSS styles here (same as in the provided register page) */
     </style>
 </head>
 <body>
+<video class="background-video" autoplay loop muted>
+    <source src="/images/login.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
 <header class="header">
     <div class="logo">CarCaddy</div>
     <nav class="navbar">
@@ -202,6 +232,9 @@ input:focus, select:focus {
                 <input type="password" id="password" name="password" th:field="*{password}" required>
             </div>
         </div>
+        <div class="text sign-up-text">
+  Don't have an account? <a href='http://localhost:8080/customer/register'>Sign up now</a>
+</div>
         <div class="form-row">
             <button type="submit" class="login-btn">Login</button>
         </div>

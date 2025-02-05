@@ -95,6 +95,16 @@
         .input-field input[type="date"]:valid {
             color: #333;
         }
+        /* Video background */
+        .background-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures video covers the whole background */
+            z-index: -1; /* Makes sure the video is behind other content */
+        }
         .form-section button {
             margin-top: 20px;
             width: 100%;
@@ -124,9 +134,14 @@
     </style>
 </head>
 <body>
+<!-- Background Video -->
+<video class="background-video" autoplay loop muted>
+    <source src="/images/login.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
     <div class="container">
         <header>Vehicle Registration</header>
-        <form th:action="@{/register}" th:object="${car}" method="post">
+        <form th:action="@{/carregister}" th:object="${car}" method="post">
             <!-- Vehicle Details Section -->
             <div class="form-section">
                 <span class="title">Vehicle Details</span>
@@ -148,6 +163,13 @@
                         <input type="text" th:field="*{model}" >
                         <p th:if="${validationErrors?.containsKey('model')}" 
                            th:text="${validationErrors.model}" 
+                           style="color: red;"></p>
+                    </div>
+                    <div class="input-field">
+                        <label for="email">Email ID</label>
+                        <input type="text" th:field="*{email}" placeholder="abc@gmail.com" >
+                        <p th:if="${validationErrors?.containsKey('email')}" 
+                           th:text="${validationErrors.email}" 
                            style="color: red;"></p>
                     </div>
                     <div class="input-field">

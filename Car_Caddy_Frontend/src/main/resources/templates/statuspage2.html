@@ -69,6 +69,16 @@
 			transition: background-color 0.3s ease;
 		}
 
+/* Video background */
+        .background-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures video covers the whole background */
+            z-index: -1; /* Makes sure the video is behind other content */
+        }
 		.next-button:hover {
 			background-color: #45a049;
 		}
@@ -98,6 +108,11 @@
 </head>
 
 <body>
+<!-- Background Video -->
+<video class="background-video" autoplay loop muted>
+    <source src="/images/login.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
 	<div class="container">
 		<!-- Page Title -->
 		<h1>Registration Status</h1>

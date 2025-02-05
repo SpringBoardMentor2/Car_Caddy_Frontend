@@ -90,6 +90,16 @@
 			background-color: #45a049;
 			transform: translateY(-2px);
 		}
+		/* Video background */
+        .background-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures video covers the whole background */
+            z-index: -1; /* Makes sure the video is behind other content */
+        }
 
 		/* Responsive Design */
 		@media (max-width: 768px) {
@@ -106,12 +116,17 @@
 	</style>
 </head>
 <body>
+<!-- Background Video -->
+<video class="background-video" autoplay loop muted>
+    <source src="/images/login.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
     <h1>Find Car by Vehicle ID</h1>
     <form th:action="@{/findCarsByID}" method="get">
-        <label for="vehicleId">Enter Vehicle ID:</label>
-        <input type="number" id="vehicleId" name="vehicleId" th:value="${vehicleId}">
-        <p th:if="${validationErrors?.containsKey('vehicleId')}" 
-           th:text="${validationErrors.vehicleId}" 
+        <label for="carId">Enter Vehicle ID:</label>
+        <input type="number" id="carId" name="carId" th:value="${carId}">
+        <p th:if="${validationErrors?.containsKey('carId')}" 
+           th:text="${validationErrors.carId}" 
            style="color: red;"></p>
         <button type="submit">Find Car</button>
     </form>

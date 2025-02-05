@@ -50,7 +50,7 @@ let firstpara = document.querySelector(".pfpara");
 let secondpara = document.querySelector(".pspara");
 let thirdpara = document.querySelector(".ptpara");
 
-let s1 = "CARCADDY is now open here in Kolkata!";
+let s1 = "CARCADDY is now open here in India!";
 let s2 = "Rent smarter, not harder.";
 let s3 = "Freedom on demand. Book now.";
 
@@ -105,3 +105,12 @@ register.addEventListener("mouseleave", () => {
     register.style.backgroundColor = "#301F47";
     register.style.color = "#ffffff";
 });
+
+
+// Initialize QRious
+const qr = new QRious({
+    element: document.getElementById('qr-code'),
+    value: 'images/PetCarePal_Brochure.pdf', // URL to the brochure
+    size: 200, // Size of the QR code
+    level: 'H', // Error correction level (H = high)
+  });

@@ -49,6 +49,10 @@ public class AdminController {
 //        return "adminLogin";  // Returns adminLogin.html page
 //    }
 
+	@GetMapping("/admin")
+	public String admin() {
+		return "admin";
+	}
 	@PostMapping("/login")
 	public String loginAdmin(@ModelAttribute AdminLogin adminLogin, Model model, BindingResult result,
 			HttpSession session) {

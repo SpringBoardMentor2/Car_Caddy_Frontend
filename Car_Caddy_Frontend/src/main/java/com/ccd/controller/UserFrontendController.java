@@ -29,6 +29,17 @@ import jakarta.servlet.http.HttpSession;
 public class UserFrontendController {
 
 	private final RestTemplate restTemplate = new RestTemplate();
+	@GetMapping("/notverified")
+	public String notverified() {
+		return "notverified";
+	}
+	@GetMapping("/home")
+	public String home() {
+		return "home";
+	}
+	
+	
+	
 
 	// Role selection page (GET)
 	@GetMapping("/selectRole")
@@ -69,94 +80,94 @@ public class UserFrontendController {
 	}
 
 	// Admin login page
-	@GetMapping("/adminLogin")
-	public String adminLoginPage() {
-		return "adminLogin";
-	}
-
-	@PostMapping("/adminLogin")
-	public String adminLogin(@RequestParam("username") String username, @RequestParam("password") String password,
-			HttpSession session, Model model) {
-		String url = "http://localhost:9090/auth/adminLogin";
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Content-Type", "application/x-www-form-urlencoded");
-
-		String body = "username=" + username + "&password=" + password;
-		HttpEntity<String> request = new HttpEntity<>(body, headers);
-
-		try {
-			ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
-
-			if (response.getStatusCode().is2xxSuccessful()) {
-				session.setAttribute("role", "admin"); // Store role in session
-				session.setAttribute("username", username); // Store username in session for display
-				return "redirect:/auth/adminDashboard"; // Redirect to adminDashboard
+			@GetMapping("/adminLogin1")
+			public String adminLoginPage() {
+				return "adminLogin";
 			}
-		} catch (HttpClientErrorException.BadRequest e) {
-			ObjectMapper objectMapper = new ObjectMapper();
+
+		@PostMapping("/adminLogin1")
+		public String adminLogin(@RequestParam("username") String username, @RequestParam("password") String password,
+				HttpSession session, Model model) {
+			String url = "http://localhost:9090/auth/adminasLogin";
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Content-Type", "application/x-www-form-urlencoded");
+
+			String body = "username=" + username + "&password=" + password;
+			HttpEntity<String> request = new HttpEntity<>(body, headers);
+
 			try {
-				Map<String, String> errors = objectMapper.readValue(e.getResponseBodyAsString(), new TypeReference<>() {
-				});
-				model.addAttribute("validationErrors", errors);
-			} catch (Exception ex) {
-				model.addAttribute("errorMessage", "An unexpected error occurred: " + ex.getMessage());
+				ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+
+				if (response.getStatusCode().is2xxSuccessful()) {
+					session.setAttribute("role", "admin"); // Store role in session
+					session.setAttribute("username", username); // Store username in session for display
+					return "redirect:/auth/adminDashboard"; // Redirect to adminDashboard
+				}
+			} catch (HttpClientErrorException.BadRequest e) {
+				ObjectMapper objectMapper = new ObjectMapper();
+				try {
+					Map<String, String> errors = objectMapper.readValue(e.getResponseBodyAsString(), new TypeReference<>() {
+					});
+					model.addAttribute("validationErrors", errors);
+				} catch (Exception ex) {
+					model.addAttribute("errorMessage", "An unexpected error occurred: " + ex.getMessage());
+				}
+			} catch (Exception e) {
+				model.addAttribute("errorMessage", "Admin login failed: " + e.getMessage());
 			}
-		} catch (Exception e) {
-			model.addAttribute("errorMessage", "Admin login failed: " + e.getMessage());
+
+			return "adminLogin"; // Reload login page with error message
 		}
 
-		return "adminLogin"; // Reload login page with error message
-	}
-
-	@GetMapping("/adminDashboard")
-	public String adminDashboard(HttpSession session, Model model) {
-		if (!"admin".equals(session.getAttribute("role"))) {
-			return "error403"; // Redirect to error page if not admin
-		}
-		model.addAttribute("username", session.getAttribute("username")); // Pass admin username to the dashboard
-		return "adminDashboard";
-	}
-
-	// Admin registration page
-	@GetMapping("/registerAdmin")
-	public String registerAdminPage() {
-		return "registerAdmin";
-	}
-
-	// Register admin
-	@PostMapping("/registerAdmin")
-	public String registerAdmin(@RequestParam("username") String username, @RequestParam("password") String password,
-			Model model) {
-		String url = "http://localhost:9090/auth/registerAdmin";
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Content-Type", "application/x-www-form-urlencoded");
-
-		HttpEntity<String> request = new HttpEntity<>("username=" + username + "&password=" + password, headers);
-
-		try {
-			ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
-
-			if (response.getStatusCode().is2xxSuccessful()) {
-				model.addAttribute("successMessage", "Admin registered successfully. Please log in.");
-				return "successpageadmin";
+		@GetMapping("/adminDashboard")
+		public String adminDashboard(HttpSession session, Model model) {
+			if (!"admin".equals(session.getAttribute("role"))) {
+				return "error403"; // Redirect to error page if not admin
 			}
-		} catch (HttpClientErrorException.BadRequest e) {
-			ObjectMapper objectMapper = new ObjectMapper();
+			model.addAttribute("username", session.getAttribute("username")); // Pass admin username to the dashboard
+			return "adminDashboard";
+		}
+
+		// Admin registration page
+		@GetMapping("/registerAdmin1")
+		public String registerAdminPage() {
+			return "registerAdmin";
+		}
+
+		// Register admin
+		@PostMapping("/registerAdmin1")
+		public String registerAdmin(@RequestParam("username") String username, @RequestParam("password") String password,
+				Model model) {
+			String url = "http://localhost:9090/auth/registerasAdmin";
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Content-Type", "application/x-www-form-urlencoded");
+
+			HttpEntity<String> request = new HttpEntity<>("username=" + username + "&password=" + password, headers);
+
 			try {
-				Map<String, String> errors = objectMapper.readValue(e.getResponseBodyAsString(), new TypeReference<>() {
-				});
-				model.addAttribute("validationErrors", errors);
-			} catch (Exception ex) {
-				model.addAttribute("errorMessage", "An unexpected error occurred: " + ex.getMessage());
-			}
-		} catch (Exception e) {
-			model.addAttribute("errorMessage", "Admin registration failed: " + e.getMessage());
-		}
+				ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
 
-		return "adminLogin";
-	}
+				if (response.getStatusCode().is2xxSuccessful()) {
+					model.addAttribute("successMessage", "Admin registered successfully. Please log in.");
+					return "successpageadmin";
+				}
+			} catch (HttpClientErrorException.BadRequest e) {
+				ObjectMapper objectMapper = new ObjectMapper();
+				try {
+					Map<String, String> errors = objectMapper.readValue(e.getResponseBodyAsString(), new TypeReference<>() {
+					});
+					model.addAttribute("validationErrors", errors);
+				} catch (Exception ex) {
+					model.addAttribute("errorMessage", "An unexpected error occurred: " + ex.getMessage());
+				}
+			} catch (Exception e) {
+				model.addAttribute("errorMessage", "Admin registration failed: " + e.getMessage());
+			}
+
+			return "registerAdmin";
+		}
 
 	// Fetch users
 	@GetMapping("/getAllUsers")

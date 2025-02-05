@@ -72,6 +72,16 @@
 			outline: none;
 			box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
 		}
+		/* Video background */
+        .background-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures video covers the whole background */
+            z-index: -1; /* Makes sure the video is behind other content */
+        }
 
 		button[type="submit"] {
 			margin-top: 20px;
@@ -107,6 +117,11 @@
 </head>
 
 <body>
+<!-- Background Video -->
+<video class="background-video" autoplay loop muted>
+    <source src="/images/login.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
     <h1>Find Vehicle by Type</h1>
     <div class="form-container">
         <form th:action="@{/findCarsByVehicleType}" method="get">

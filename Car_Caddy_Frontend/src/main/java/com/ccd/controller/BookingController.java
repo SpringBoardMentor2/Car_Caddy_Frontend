@@ -95,8 +95,8 @@ public class BookingController {
 		return "bookForm";
 	}
 
-	@PostMapping("/bookCar/{carId}")
-	public String bookCar(@PathVariable int carId, @ModelAttribute("booking") Rent_Booking booking,
+	//@PostMapping("/bookCar/{carId}")
+	/*public String bookCar(@PathVariable int carId, @ModelAttribute("booking") Rent_Booking booking,
 			BindingResult result, Model model) {
 		RestTemplate restTemplate = new RestTemplate();
 		try {
@@ -114,24 +114,24 @@ public class BookingController {
 						});
 				List<Employee> employees = employeeResponse.getBody();
 				Employee employee = null;
-				if (employees != null && !employees.isEmpty()) {
+				//if (employees != null && !employees.isEmpty()) {
 					for (Employee emp : employees) {
-						if ("available".equalsIgnoreCase(emp.getAvailabilityStatus())) {
+				//		if ("available".equalsIgnoreCase(emp.getAvailabilityStatus())) {
 							employee = emp;
 							break;
 						}
 					}
-				}
+				//}
 
 				Rent_Booking book = new Rent_Booking();
-				book.setCar(car);
-				book.setCustomer(customer);
+				//book.setCar(car);
+				//book.setCustomer(customer);
 				// book.setEmployee(employee);
-				if (employee != null) {
+				//if (employee != null) {
 					String availability = "not-available";
 					ResponseEntity<?> availabilityResponse = restTemplate.exchange(
-							"http://localhost:9090/updateEmployeeAvailability/" + employee.getEmployeeId() + "/"
-									+ availability,
+					//		"http://localhost:9090/updateEmployeeAvailability/" + employee.getEmployeeId() + "/"
+						//			+ availability,
 							HttpMethod.POST,
 							null,
 							Void.class);
@@ -191,7 +191,7 @@ public class BookingController {
 			}
 		}
 		return "bookForm";
-	}
+	}*/
 
 	@GetMapping("/viewBookingById")
 	public String viewBookingById(@RequestParam("bookingId") String bookingId, Model model) {
