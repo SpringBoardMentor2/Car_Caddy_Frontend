@@ -73,7 +73,7 @@ public class AdminController {
 				Object obejct = session.getAttribute("admin");
 				System.out.println(obejct);
 				model.addAttribute("message", "Login successful!");
-				return "adminDashboard1"; // Redirect to the admin dashboard
+				return "adminDashboard"; // Redirect to the admin dashboard
 			} else {
 				model.addAttribute("error", "Invalid credentials.");
 			}
