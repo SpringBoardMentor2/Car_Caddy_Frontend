@@ -63,6 +63,12 @@
                 <a th:text="${'Customer ID:'+customer.id}"></a>
             </li>
             <li th:if="${customer}">
+                <a th:href="@{/viewAllVehicles}">Cars</a>
+            </li>
+            <li th:if="${customer}">
+                <a th:href="@{/rent}">Book</a>
+            </li>
+            <li th:if="${customer}">
                 <a th:href="@{/update}">Update</a>
             </li>
             <li th:if="${customer}">

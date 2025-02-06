@@ -9,6 +9,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -95,74 +97,98 @@ public class BookingController {
 		return "bookForm";
 	}
 
-	//@PostMapping("/bookCar/{carId}")
-	/*public String bookCar(@PathVariable int carId, @ModelAttribute("booking") Rent_Booking booking,
-			BindingResult result, Model model) {
+	@PostMapping("/bookCar/{carId}")
+	public String bookCar(@PathVariable int carId, @ModelAttribute("booking") Rent_Booking booking,
+			BindingResult result, Model model, HttpSession session) {
 		RestTemplate restTemplate = new RestTemplate();
 		try {
 			if (booking != null) {
-				Customer customer = restTemplate.getForObject(BASE_URL + "/customers/" + 1, Customer.class);
-				Car car = restTemplate.getForObject(BASE_URL + "/cars/" + carId, Car.class);
-				System.out.println(
-						"For Sake Of Understanding: Customer Details Will Come From Session At This Moment Taking Static Data");
+				if ((Customer) session.getAttribute("customer") != null) {
+					Customer c = (Customer) session.getAttribute("customer");
+					Customer customer = restTemplate.getForObject(BASE_URL + "/customers/" + c.getId(), Customer.class);
+					Car car = restTemplate.getForObject(BASE_URL + "/cars/" + carId, Car.class);
+					System.out.println(
+							"For Sake Of Understanding: Customer Details Will Come From Session At This Moment Taking Static Data");
 
-				ResponseEntity<List<Employee>> employeeResponse = restTemplate.exchange(
-						"http://localhost:9090/getAllEmployees",
-						HttpMethod.GET,
-						null,
-						new ParameterizedTypeReference<List<Employee>>() {
-						});
-				List<Employee> employees = employeeResponse.getBody();
-				Employee employee = null;
-				//if (employees != null && !employees.isEmpty()) {
-					for (Employee emp : employees) {
-				//		if ("available".equalsIgnoreCase(emp.getAvailabilityStatus())) {
-							employee = emp;
-							break;
+					ResponseEntity<List<Employee>> employeeResponse = restTemplate.exchange(
+							"http://localhost:9090/getAllEmployees",
+							HttpMethod.GET,
+							null,
+							new ParameterizedTypeReference<List<Employee>>() {
+							});
+					List<Employee> employees = employeeResponse.getBody();
+					Employee employee = null;
+					if (employees != null && !employees.isEmpty()) {
+						for (Employee emp : employees) {
+							if ("available".equalsIgnoreCase(emp.getAvailabilityStatus())) {
+								employee = emp;
+								break;
+							}
+						}
+						if (employee == null) {
+							ResponseEntity<Car> response = restTemplate.getForEntity(BASE_URL + "/cars/" + carId,
+									Car.class);
+							Car car1 = response.getBody();
+							System.out.println("car details:" + car1);
+							System.out.println();
+							model.addAttribute("car", car1);
+							model.addAttribute("error", "Employees are not available!");
+							return "bookForm";
 						}
 					}
-				//}
 
-				Rent_Booking book = new Rent_Booking();
-				//book.setCar(car);
-				//book.setCustomer(customer);
-				// book.setEmployee(employee);
-				//if (employee != null) {
-					String availability = "not-available";
-					ResponseEntity<?> availabilityResponse = restTemplate.exchange(
-					//		"http://localhost:9090/updateEmployeeAvailability/" + employee.getEmployeeId() + "/"
-						//			+ availability,
-							HttpMethod.POST,
-							null,
-							Void.class);
-							System.out.println(availabilityResponse);
-					book.setEmployee(employee);
+					Rent_Booking book = new Rent_Booking();
+					book.setCar(car);
+					book.setCustomer(customer);
+
+					if (employee != null) {
+						String availability = "not-available";
+						ResponseEntity<?> availabilityResponse = restTemplate.exchange(
+								"http://localhost:9090/updateEmployeeAvailability/" + employee.getEmployeeId() + "/"
+										+ availability,
+								HttpMethod.POST,
+								null,
+								Void.class);
+						System.out.println(availabilityResponse);
+						book.setEmployee(employee);
+					}
+					book.setStartDate(booking.getStartDate());
+					book.setEndDate(booking.getEndDate());
+					book.setLocation(booking.getLocation());
+					book.setStatus(booking.getStatus());
+					book.setDiscount(booking.getDiscount());
+					if (booking.getStartDate() != null && booking.getEndDate() != null) {
+						int days = (int) ChronoUnit.DAYS.between(booking.getStartDate(), booking.getEndDate());
+
+						double perDayCharge = book.getCar().getRentRate();
+						int disc = (booking.getDiscount());
+						int totalFare = (int) (days * perDayCharge);
+
+						double discountAmount = totalFare * (disc / 100.0);
+						double finalFare = totalFare - discountAmount;
+						book.setDays(days);
+						book.setTotalFare(finalFare);
+					}
+
+					ResponseEntity<Rent_Booking> response = restTemplate.postForEntity(BASE_URL + "/bookCar", book,
+							Rent_Booking.class);
+
+					if (response.getBody() != null) {
+						model.addAttribute("successMessage", "Booking Process Completed!");
+						return "redirect:/viewAllBookings";
+					}
+					
+				} else {
+					ResponseEntity<Car> response = restTemplate.getForEntity(BASE_URL + "/cars/" + carId,
+							Car.class);
+					Car car1 = response.getBody();
+					System.out.println("car details:" + car1);
+					System.out.println();
+					model.addAttribute("car", car1);
+					model.addAttribute("error", "Please login!");
+					return "bookForm";
 				}
-				book.setStartDate(booking.getStartDate());
-				book.setEndDate(booking.getEndDate());
-				book.setLocation(booking.getLocation());
-				book.setStatus(booking.getStatus());
-				book.setDiscount(booking.getDiscount());
-				if (booking.getStartDate() != null && booking.getEndDate() != null) {
-					int days = (int) ChronoUnit.DAYS.between(booking.getStartDate(), booking.getEndDate());
 
-					double perDayCharge = book.getCar().getRentRate();
-					int disc = (booking.getDiscount());
-					int totalFare = (int) (days * perDayCharge);
-
-					double discountAmount = totalFare * (disc / 100.0);
-					double finalFare = totalFare - discountAmount;
-					book.setDays(days);
-					book.setTotalFare(finalFare);
-				}
-
-				ResponseEntity<Rent_Booking> response = restTemplate.postForEntity(BASE_URL + "/bookCar", book,
-						Rent_Booking.class);
-
-				if (response.getBody() != null) {
-					model.addAttribute("successMessage", "Booking Process Completed!");
-					return "redirect:/viewAllBookings";
-				}
 			}
 		} catch (HttpClientErrorException e) {
 			Map<String, String> errors = null;
@@ -191,7 +217,7 @@ public class BookingController {
 			}
 		}
 		return "bookForm";
-	}*/
+	}
 
 	@GetMapping("/viewBookingById")
 	public String viewBookingById(@RequestParam("bookingId") String bookingId, Model model) {
@@ -271,7 +297,7 @@ public class BookingController {
 						HttpMethod.POST,
 						null,
 						Void.class);
-						System.out.println(availabilityResponse);
+				System.out.println(availabilityResponse);
 			}
 
 			model.addAttribute("message", response.getBody());

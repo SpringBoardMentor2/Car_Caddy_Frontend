@@ -35,9 +35,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import jakarta.servlet.http.HttpSession;
-
 import com.ccd.model.Car;
 
 @Controller
@@ -61,13 +58,8 @@ public class CarController {
 		return "home";
 	}
 
-	@GetMapping("/commingsoon")
-	public String commingsoon() {
-		return "commingsoon";
-	}
 	@GetMapping("/index")
-	public String index(HttpSession session, Model model) {
-		model.addAttribute("username", session.getAttribute("username"));
+	public String index() {
 		return "index";
 	}
 
@@ -84,9 +76,10 @@ public class CarController {
 		return new RestTemplate();
 	}
 
-	@PostMapping("/carregister")
+	@PostMapping("//register")
 	public String submitVehicleFormPage(@ModelAttribute("car") Car car, Model model) {
 		String url = "http://localhost:9090/car/add";
+		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Content-Type", "application/json");
 		HttpEntity<Car> request = new HttpEntity<>(car, headers);
@@ -140,6 +133,7 @@ public class CarController {
 		model.addAttribute("vehicles", car);
 		if (car != null && car.size() != 0) {
 			System.out.println("inside if of showall");
+			model.addAttribute("vehicles", car);
 			return "carlist";
 		} else {
 			model.addAttribute("errorMessage", "No record found!!!");
@@ -262,24 +256,24 @@ public class CarController {
 	}
 
 	@GetMapping("/viewbyID")
-	public String viewByIDPage(@ModelAttribute("carId") String carId, Model model) {
+	public String viewByIDPage(@ModelAttribute("vehicleId") String vehicleId, Model model) {
 
-		model.addAttribute("carId", new Car());
+		model.addAttribute("vehicleId", new Car());
 		return "findbyId";
 
 	}
 
 	@GetMapping("/findCarsByVehicleID")
-	public String updateCarForm(@RequestParam(required = false) Integer carId, Model model) {
-		if (carId == null) {
+	public String updateCarForm(@RequestParam(required = false) Integer vehicleId, Model model) {
+		if (vehicleId == null) {
 			Map<String, String> validationErrors = new HashMap<>();
-			validationErrors.put("carId", "Vehicle ID is required.");
+			validationErrors.put("vehicleId", "Vehicle ID is required.");
 			model.addAttribute("validationErrors", validationErrors);
-			model.addAttribute("carId", ""); // Retain the input field value
-			return "findbyId";
+			model.addAttribute("vehicleId", ""); // Retain the input field value
+			return "findbyid";
 		}
 
-		String fetchUrl = "http://localhost:9090/car/viewByVehicleID?carId=" + carId;
+		String fetchUrl = "http://localhost:9090/car/viewByVehicleID?vehicleId=" + vehicleId;
 		try {
 			ResponseEntity<Car> response = restTemplate().exchange(fetchUrl, HttpMethod.GET, null, Car.class);
 			Car car = response.getBody();
@@ -295,9 +289,9 @@ public class CarController {
 			} catch (Exception ex) {
 				model.addAttribute("errorMessage", "An unexpected error occurred while processing validation errors.");
 			}
-			return "findbyId";
+			return "findbyid";
 		} catch (HttpClientErrorException.NotFound e) {
-			model.addAttribute("errorMessage", "Car with Vehicle ID " + carId + " not found.");
+			model.addAttribute("errorMessage", "Car with Vehicle ID " + vehicleId + " not found.");
 //			return "statuspage";
 			return "statuspage2";
 		} catch (Exception e) {
@@ -348,24 +342,24 @@ public class CarController {
 	}
 
 	@GetMapping("/viewbyVehicleID")
-	public String viewByVehicleIDPage(@ModelAttribute("carId") String carId, Model model) {
+	public String viewByVehicleIDPage(@ModelAttribute("vehicleId") String vehicleId, Model model) {
 
-		model.addAttribute("carId", new Car());
+		model.addAttribute("vehicleId", new Car());
 		return "findbyVehicleId";
 
 	}
 
 	@GetMapping("/findCarsByID")
-	public String deleteVehicleForm(@RequestParam(required = false) Integer carId, Model model) {
-		if (carId == null) {
+	public String deleteVehicleForm(@RequestParam(required = false) Integer vehicleId, Model model) {
+		if (vehicleId == null) {
 			Map<String, String> validationErrors = new HashMap<>();
-			validationErrors.put("carId", "Vehicle ID is required.");
+			validationErrors.put("vehicleId", "Vehicle ID is required.");
 			model.addAttribute("validationErrors", validationErrors);
-			model.addAttribute("carId", ""); // Retain the input field value
-			return "findbyVehicleId";
+			model.addAttribute("vehicleId", ""); // Retain the input field value
+			return "findbyid";
 		}
 
-		String fetchUrl = "http://localhost:9090/car/viewByVehicleID?carId=" + carId;
+		String fetchUrl = "http://localhost:9090/car/viewByVehicleID?vehicleId=" + vehicleId;
 		try {
 			ResponseEntity<Car> response = restTemplate().exchange(fetchUrl, HttpMethod.GET, null, Car.class);
 			Car car = response.getBody();
@@ -381,9 +375,9 @@ public class CarController {
 			} catch (Exception ex) {
 				model.addAttribute("errorMessage", "An unexpected error occurred while processing validation errors.");
 			}
-			return "findbyVehicleId";
+			return "findbyid";
 		} catch (HttpClientErrorException.NotFound e) {
-			model.addAttribute("errorMessage", "Car with Vehicle ID " + carId + " not found.");
+			model.addAttribute("errorMessage", "Car with Vehicle ID " + vehicleId + " not found.");
 //			return "statuspage";
 			return "statuspage2";
 		} catch (Exception e) {
@@ -394,16 +388,16 @@ public class CarController {
 	}
 
 	@PostMapping("/deleteCarsByVehicleID")
-	public String deleteCarForm(@RequestParam("carId") int carId, Model model) {
-		String deleteUrl = "http://localhost:9090/car/delete/" + carId;
+	public String deleteCarForm(@RequestParam("vehicleId") int vehicleId, Model model) {
+		String deleteUrl = "http://localhost:9090/car/delete/" + vehicleId;
 
 		try {
 			// Call delete endpoint
 			restTemplate().exchange(deleteUrl, HttpMethod.DELETE, null, String.class);
-			model.addAttribute("successMessage", "Car with Vehicle ID " + carId + " deleted successfully.");
+			model.addAttribute("successMessage", "Car with Vehicle ID " + vehicleId + " deleted successfully.");
 		} catch (RestClientException e) {
 			model.addAttribute("errorMessage",
-					"Failed to delete car with Vehicle ID " + carId + ": " + e.getMessage());
+					"Failed to delete car with Vehicle ID " + vehicleId + ": " + e.getMessage());
 		}
 
 //		return "statuspage";

@@ -76,24 +76,6 @@
             cursor: pointer;
         }
 
-        /* Book Car Button */
-        .book-btn {
-            background-color: #ff9800;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            font-size: 14px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-        }
-
-        .book-btn:hover {
-            background-color: #e68900;
-            transform: translateY(-2px);
-        }
-
         /* Responsive Styles */
         @media (max-width: 768px) {
             th, td {
@@ -110,18 +92,8 @@
                 font-size: 12px;
             }
         }
-        /* Video background */
-        .background-video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Ensures video covers the whole background */
-            z-index: -1; /* Makes sure the video is behind other content */
-        }
 
-        /* Pagination Container */
+        /* Pagination Container Example */
         .pagination {
             display: flex;
             justify-content: center;
@@ -147,11 +119,6 @@
     </style>
 </head>
 <body>
-<!-- Background Video -->
-<video class="background-video" autoplay loop muted>
-    <source src="/images/login.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-</video>
     <!-- Page Title -->
     <h2>Car List</h2>
 
@@ -163,7 +130,6 @@
                     <th>Vehicle ID</th>
                     <th>Vehicle Type</th>
                     <th>Vehicle Model</th>
-                    <th>Driver Email</th>
                     <th>Year of Manufacture</th>
                     <th>License Plate Number</th>
                     <th>Registration Certificate</th>
@@ -175,7 +141,6 @@
                     <th>Status</th>
                     <th>Last Maintenance Date</th>
                     <th>Next Maintenance Date</th>
-                    <th>Action</th> <!-- New column for the button -->
                 </tr>
             </thead>
             <tbody>
@@ -184,7 +149,6 @@
                     <td th:text="${vehicle.carId}"></td>
                     <td th:text="${vehicle.vehicleType}"></td>
                     <td th:text="${vehicle.model}"></td>
-                    <td th:text="${vehicle.email}"></td>
                     <td th:text="${vehicle.yearOfManufacture}"></td>
                     <td th:text="${vehicle.licencePlateNumber}"></td>
                     <td th:text="${vehicle.registrationCertificate}"></td>
@@ -196,9 +160,8 @@
                     <td th:text="${vehicle.status}"></td>
                     <td th:text="${vehicle.lastMaintenanceDate}"></td>
                     <td th:text="${vehicle.nextMaintenanceDate}"></td>
-                    <!-- Book Car Button -->
                     <td>
-                        <a th:href="@{/book-car/{id}(id=${vehicle.carId})}">
+                        <a th:href="@{'/bookingForm/' + ${vehicle.carId}}">
                             <button class="book-btn">Book Car</button>
                         </a>
                     </td>
