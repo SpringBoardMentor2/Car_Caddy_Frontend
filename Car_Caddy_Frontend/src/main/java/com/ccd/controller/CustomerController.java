@@ -312,14 +312,12 @@ public class CustomerController {
 			@RequestParam(value = "loyaltyPoints", required = false) Integer loyaltyPoints,
 			@RequestParam(value = "blocklistStatus", required = false) Boolean blocklistStatus,
 			@RequestParam(value = "password", required = false) String password,
-
 			@ModelAttribute("customer") Customer customer, BindingResult result, Model model) {
 
 		System.out.println(id);
 //		if (role != null && role.equals("customer") && id == null && custSession != null) {
 //			id = custSession.getId();
 //		}
-
 
 		Map<String, Object> updatedCustomer = new HashMap<>();
 		updatedCustomer.put("id", id);
@@ -353,7 +351,6 @@ public class CustomerController {
 //			model.addAttribute("role", role);
 
 			model.addAttribute("role", role);
-
 			model.addAttribute("message", "Customer updated successfully.");
 			model.addAttribute("customer", new Customer());
 		} catch (HttpClientErrorException e) {
